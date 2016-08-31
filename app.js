@@ -42,9 +42,18 @@ function drawPixel(x,y) {
   ctx.fillRect(x*pixelWidth, y*pixelHeight, pixelWidth, pixelHeight);
 }
 
+let animationProgress = 0;
+let previousTimestamp = null;
+
 // animation loop
 function step(timestamp) {
-  update(gameState);
+  if (!previousTimestamp) timestamp = timestamp;
+  animationProgress += timestamp - previousTimestamp;
+  previousTimestamp = timestamp;
+  if (animationProgress > 100) {
+    update(gameState);
+    animationProgress = 0;
+  }
   draw(gameState.getScreenBuffer());
   window.requestAnimationFrame(step);
 }
