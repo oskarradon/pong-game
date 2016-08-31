@@ -4,8 +4,10 @@ var ctx = canvas.getContext("2d");
 ctx.fillStyle = "black";
 // ctx.fillRect(10, 10, 100, 100);
 
-const gameWidth  = 24;
-const gameHeight = 16;
+const gameWidth    = 24;
+const gameHeight   = 18;
+const canvasWidth  = canvas.width;
+const canvasHeight = canvas.height;
 
 
 // game state 2d array of booleans
@@ -27,9 +29,11 @@ function draw(gameState) {
 }
 
 function drawPixel(x,y) {
-  ctx.fillRect(x, y, 1, 1);
+  let pixelWidth  = canvasWidth/gameWidth;
+  let pixelHeight = canvasHeight/gameHeight;
+  ctx.fillRect(x*pixelWidth, y*pixelHeight, pixelWidth, pixelHeight);
 }
 
-gameState[10][10] = true;
+gameState[1][1] = true;
 
 draw(gameState);
