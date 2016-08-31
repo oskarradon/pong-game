@@ -9,6 +9,7 @@ const gameHeight   = 18;
 const canvasWidth  = canvas.width;
 const canvasHeight = canvas.height;
 const gameSpeed    = 100;
+const paddleHeight = 4;
 const gameState = {
   ball: {x: gameWidth/2, y: gameHeight/2, velocity: { x: 0, y: 0 }},
   paddle1: {x: 0, y: gameHeight/2, velocity: { x: 0, y: 0 }},
@@ -114,16 +115,16 @@ function update(gameState) {
   gameState.ball.x += gameState.ball.velocity.x;
   gameState.ball.y += gameState.ball.velocity.y;
 
-  if (keyboarder.isDown(keyboarder.KEYS.p1Up)) {
+  if (keyboarder.isDown(keyboarder.KEYS.p1Up) && gameState.paddle1.y > 0) {
     gameState.paddle1.velocity.y = -1;
-  } else if (keyboarder.isDown(keyboarder.KEYS.p1Down)) {
+  } else if (keyboarder.isDown(keyboarder.KEYS.p1Down) && gameState.paddle1.y < gameHeight - paddleHeight) {
     gameState.paddle1.velocity.y = 1;
   } else {
     gameState.paddle1.velocity.y = 0;
   }
-  if (keyboarder.isDown(keyboarder.KEYS.p2Up)) {
+  if (keyboarder.isDown(keyboarder.KEYS.p2Up) && gameState.paddle2.y > 0) {
     gameState.paddle2.velocity.y = -1;
-  } else if (keyboarder.isDown(keyboarder.KEYS.p2Down)) {
+  } else if (keyboarder.isDown(keyboarder.KEYS.p2Down) && gameState.paddle2.y < gameHeight - paddleHeight) {
     gameState.paddle2.velocity.y = 1;
   } else {
     gameState.paddle2.velocity.y = 0;
