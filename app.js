@@ -15,6 +15,32 @@ const gameState = {
   paddle2: {x: gameWidth-1, y: gameHeight/2, velocity: { x: 0, y: 0 }}
 };
 
+//keyboard input
+var Keyboarder = function() {
+  var keyState = {};
+
+  window.onkeydown = function(e) {
+    keyState[e.keyCode] = true;
+  };
+
+  window.onkeyup = function(e) {
+    keyState[e.keyCode] = false;
+  };
+
+  this.isDown = function(keyCode) {
+    return keyState[keyCode] === true;
+  };
+
+  this.KEYS = {
+    p1Up:   87, // "W",
+    p1Down: 83, // "S",
+    p2Up:   38, // "up arrow",
+    p2Down: 40, // "down arrow",
+  };
+};
+
+let keyboarder = new Keyboarder();
+
 
 gameState.getScreenBuffer = function() {
   const screenBuffer = [];
@@ -87,6 +113,23 @@ function update(gameState) {
   }
   gameState.ball.x += gameState.ball.velocity.x;
   gameState.ball.y += gameState.ball.velocity.y;
+
+  if (keyboarder.isDown(keyboarder.KEYS.p1Up)) {
+    gameState.paddle1.velocity.y = -1;
+  } else if (keyboarder.isDown(keyboarder.KEYS.p1Down)) {
+    gameState.paddle1.velocity.y = 1;
+  } else {
+    gameState.paddle1.velocity.y = 0;
+  }
+  if (keyboarder.isDown(keyboarder.KEYS.p2Up)) {
+    gameState.paddle2.velocity.y = -1;
+  } else if (keyboarder.isDown(keyboarder.KEYS.p2Down)) {
+    gameState.paddle2.velocity.y = 1;
+  } else {
+    gameState.paddle2.velocity.y = 0;
+  }
+  gameState.paddle1.y += gameState.paddle1.velocity.y;
+  gameState.paddle2.y += gameState.paddle2.velocity.y;
 }
 
 // init
