@@ -11,7 +11,7 @@ const canvasHeight = canvas.height;
 const gameSpeed    = 100;
 const paddleHeight = 4;
 const gameState = {
-  ball: {x: gameWidth/2, y: gameHeight/2, velocity: { x: 0, y: 0 }},
+  ball: {x: gameWidth/2, y: gameHeight/2, velocity: { x: 1, y: 0 }},
   paddle1: {x: 0, y: gameHeight/2, velocity: { x: 0, y: 0 }},
   paddle2: {x: gameWidth-1, y: gameHeight/2, velocity: { x: 0, y: 0 }}
 };
@@ -100,7 +100,12 @@ function step(timestamp) {
 }
 
 function update(gameState) {
-  if (gameState.ball.x === gameWidth - 1) {
+  updateBall(gameState);
+  updatePaddles(gameState);
+}
+
+function updateBall() {
+  if ((gameState.ball.x === gameWidth - 2) && paddleCollison(gameState.ball, gameState.paddle2)) {
     gameState.ball.velocity.x *= -1;
   }
   if (gameState.ball.x === 0) {
@@ -114,7 +119,16 @@ function update(gameState) {
   }
   gameState.ball.x += gameState.ball.velocity.x;
   gameState.ball.y += gameState.ball.velocity.y;
+}
 
+function paddleCollison(ball, paddle) {
+  let paddleCenter = (paddle.y + paddle.y + paddleHeight) / 2;
+  let distanceFromCenter = Math.abs(ball.y - paddleCenter);
+  console.log("distance from center:", distanceFromCenter, "paddle center:", paddleCenter);
+  return distanceFromCenter < paddleHeight/2;
+}
+
+function updatePaddles() {
   if (keyboarder.isDown(keyboarder.KEYS.p1Up) && gameState.paddle1.y > 0) {
     gameState.paddle1.velocity.y = -1;
   } else if (keyboarder.isDown(keyboarder.KEYS.p1Down) && gameState.paddle1.y < gameHeight - paddleHeight) {
