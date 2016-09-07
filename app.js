@@ -105,15 +105,27 @@ function update(gameState) {
 }
 
 function updateBall() {
+  // collide with right paddle
   if ((gameState.ball.x === gameWidth - 2) && paddleCollison(gameState.ball, gameState.paddle2)) {
     gameState.ball.velocity.x *= -1;
   }
+  // collide with left paddle
+  if ((gameState.ball.x === 1) && paddleCollison(gameState.ball, gameState.paddle1)) {
+    gameState.ball.velocity.x *= -1;
+  }
+  // collide with right wall
+  if (gameState.ball.x === gameWidth - 1) {
+    gameState.ball.velocity.x *= -1;
+  }
+  // collide with left wall
   if (gameState.ball.x === 0) {
     gameState.ball.velocity.x *= -1;
   }
+  // collide with bottom
   if (gameState.ball.y === gameHeight - 1) {
     gameState.ball.velocity.y *= -1;
   }
+  // collide with top
   if (gameState.ball.y === 0) {
     gameState.ball.velocity.y *= -1;
   }
