@@ -122,10 +122,14 @@ function updateBall() {
 }
 
 function paddleCollison(ball, paddle) {
-  let paddleCenter = (paddle.y + paddle.y + paddleHeight) / 2;
-  let distanceFromCenter = Math.abs(ball.y - paddleCenter);
+  let paddleCenter = paddle.y + (paddleHeight / 2);
+  let distanceFromCenter = ball.y - paddleCenter;
   console.log("distance from center:", distanceFromCenter, "paddle center:", paddleCenter);
-  return distanceFromCenter < paddleHeight/2;
+  if (distanceFromCenter < 0) {
+    return Math.abs(distanceFromCenter) <= paddleHeight/2;
+  } else {
+    return distanceFromCenter < paddleHeight/2;
+  }
 }
 
 function updatePaddles() {
