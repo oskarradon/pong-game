@@ -12,7 +12,8 @@ const gameSpeed    = 10;
 const paddleHeight = 40;
 const paddleWidth  = paddleHeight/4;
 const ballRadius   = 5;
-const gameState = {
+let   ballSpeed    = 1; 
+const gameState    = {
   ball: {x: gameWidth/2, y: gameHeight/2, velocity: { x: 1, y: 0 }},
   paddle1: {x: 0, y: gameHeight/2, velocity: { x: 0, y: 0 }},
   paddle2: {x: gameWidth-1, y: gameHeight/2, velocity: { x: 0, y: 0 }}
@@ -117,20 +118,28 @@ function update(gameState) {
 
 function updateBall() {
   // collide with right paddle
-  if ((gameState.ball.x + ballRadius === gameWidth - 1 - paddleWidth) && paddleCollison(gameState.ball, gameState.paddle2)) {
+  if ((gameState.ball.x + ballRadius >= gameWidth - 1 - paddleWidth) && paddleCollison(gameState.ball, gameState.paddle2)) {
     let paddleCenter = gameState.paddle2.y + (paddleHeight / 2);
     let distanceFromCenter = gameState.ball.y - paddleCenter;
     let yMultiplier = distanceFromCenter/(paddleHeight/2);
     let angle = Math.asin(yMultiplier);
     let xMultiplier = Math.cos(angle);
-    console.log("x mult: ", xMultiplier, " y mult: ", yMultiplier, " angle: ", angle);
-    gameState.ball.velocity.y = yMultiplier;
+    gameState.ball.velocity.y = yMultiplier * ballSpeed;
     gameState.ball.velocity.x = xMultiplier < .1 ? gameState.ball.velocity.x * -.2 : -xMultiplier;
-    console.log("Velocity x: ", gameState.ball.velocity.x," Velocity y: ", gameState.ball.velocity.y);
+    gameState.ball.velocity.x *= ballSpeed;
+    ballSpeed *= 1.1;
   }
   // collide with left paddle
-  if ((gameState.ball.x - ballRadius === paddleWidth) && paddleCollison(gameState.ball, gameState.paddle1)) {
-    gameState.ball.velocity.x *= -1;
+  if ((gameState.ball.x - ballRadius <= paddleWidth) && paddleCollison(gameState.ball, gameState.paddle1)) {
+    let paddleCenter = gameState.paddle1.y + (paddleHeight / 2);
+    let distanceFromCenter = gameState.ball.y - paddleCenter;
+    let yMultiplier = distanceFromCenter/(paddleHeight/2);
+    let angle = Math.asin(yMultiplier);
+    let xMultiplier = Math.cos(angle);
+    gameState.ball.velocity.y = yMultiplier * ballSpeed;
+    gameState.ball.velocity.x = xMultiplier < .1 ? gameState.ball.velocity.x * .2 : xMultiplier;
+    gameState.ball.velocity.x *= ballSpeed;
+    ballSpeed *= 1.1;
   }
   // collide with right wall
   if (gameState.ball.x + ballRadius >= gameWidth - 1) {
