@@ -11,6 +11,7 @@ const canvasHeight = canvas.height;
 const gameSpeed    = 10;
 const paddleHeight = 40;
 const paddleWidth  = paddleHeight/4;
+const ballRadius   = 5;
 const gameState = {
   ball: {x: gameWidth/2, y: gameHeight/2, velocity: { x: 1, y: 0 }},
   paddle1: {x: 0, y: gameHeight/2, velocity: { x: 0, y: 0 }},
@@ -43,14 +44,25 @@ var Keyboarder = function() {
 
 let keyboarder = new Keyboarder();
 
-
 gameState.getScreenBuffer = function() {
   const screenBuffer = [];
+  
+  function putCircle (x, y, r) {
+    for(let i=0; i<gameWidth; i++) {
+      for(let j=0; j<gameHeight; j++) {
+        if (Math.sqrt(((x-i)*(x-i))+((y-j)*(y-j))) < ballRadius) {
+          screenBuffer[i][j] = true;
+        }
+      }
+    }
+  }
+  
   for(var i=0; i<gameWidth; i++) {
     screenBuffer.push((new Array(gameHeight)).fill(false));
   }
   // set ball pixels to true
-  screenBuffer[this.ball.x][this.ball.y] = true;
+  putCircle(this.ball.x, this.ball.y, ballRadius);
+  // set paddle pixels to true
   for (let i=0; i<paddleHeight; i++) {
     for (let j=0; j<paddleWidth; j++) {
       // set paddle1 pixels
@@ -61,6 +73,8 @@ gameState.getScreenBuffer = function() {
   }
   return screenBuffer;
 }
+
+
 
 // draw function
 function draw(screenBuffer) {
@@ -105,11 +119,11 @@ function update(gameState) {
 
 function updateBall() {
   // collide with right paddle
-  if ((gameState.ball.x === gameWidth - 2) && paddleCollison(gameState.ball, gameState.paddle2)) {
+  if ((gameState.ball.x === gameWidth - 1 - paddleWidth) && paddleCollison(gameState.ball, gameState.paddle2)) {
     gameState.ball.velocity.x *= -1;
   }
   // collide with left paddle
-  if ((gameState.ball.x === 1) && paddleCollison(gameState.ball, gameState.paddle1)) {
+  if ((gameState.ball.x === paddleWidth) && paddleCollison(gameState.ball, gameState.paddle1)) {
     gameState.ball.velocity.x *= -1;
   }
   // collide with right wall
