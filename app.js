@@ -118,26 +118,34 @@ function update(gameState) {
 function updateBall() {
   // collide with right paddle
   if ((gameState.ball.x + ballRadius === gameWidth - 1 - paddleWidth) && paddleCollison(gameState.ball, gameState.paddle2)) {
-    gameState.ball.velocity.x *= -1;
+    let paddleCenter = gameState.paddle2.y + (paddleHeight / 2);
+    let distanceFromCenter = gameState.ball.y - paddleCenter;
+    let yMultiplier = distanceFromCenter/(paddleHeight/2);
+    let angle = Math.asin(yMultiplier);
+    let xMultiplier = Math.cos(angle);
+    console.log("x mult: ", xMultiplier, " y mult: ", yMultiplier, " angle: ", angle);
+    gameState.ball.velocity.y = yMultiplier;
+    gameState.ball.velocity.x = xMultiplier < .1 ? gameState.ball.velocity.x * -.2 : -xMultiplier;
+    console.log("Velocity x: ", gameState.ball.velocity.x," Velocity y: ", gameState.ball.velocity.y);
   }
   // collide with left paddle
   if ((gameState.ball.x - ballRadius === paddleWidth) && paddleCollison(gameState.ball, gameState.paddle1)) {
     gameState.ball.velocity.x *= -1;
   }
   // collide with right wall
-  if (gameState.ball.x + ballRadius === gameWidth - 1) {
+  if (gameState.ball.x + ballRadius >= gameWidth - 1) {
     gameState.ball.velocity.x *= -1;
   }
   // collide with left wall
-  if (gameState.ball.x - ballRadius === 0) {
+  if (gameState.ball.x - ballRadius <= 0) {
     gameState.ball.velocity.x *= -1;
   }
   // collide with bottom
-  if (gameState.ball.y + ballRadius === gameHeight - 1) {
+  if (gameState.ball.y + ballRadius >= gameHeight - 1) {
     gameState.ball.velocity.y *= -1;
   }
   // collide with top
-  if (gameState.ball.y - ballRadius === 0) {
+  if (gameState.ball.y - ballRadius <= 0) {
     gameState.ball.velocity.y *= -1;
   }
   gameState.ball.x += gameState.ball.velocity.x;
@@ -147,7 +155,7 @@ function updateBall() {
 function paddleCollison(ball, paddle) {
   let paddleCenter = paddle.y + (paddleHeight / 2);
   let distanceFromCenter = ball.y - paddleCenter;
-  console.log("distance from center:", distanceFromCenter, "paddle center:", paddleCenter);
+  // console.log("distance from center:", distanceFromCenter, "paddle center:", paddleCenter);
   if (distanceFromCenter < 0) {
     return Math.abs(distanceFromCenter) <= paddleHeight/2;
   } else {
