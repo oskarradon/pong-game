@@ -45,8 +45,7 @@ var Keyboarder = function() {
 let keyboarder = new Keyboarder();
 
 gameState.getScreenBuffer = function() {
-  const screenBuffer = [];
-  
+  const screenBuffer = []; 
   function putCircle (x, y, r) {
     for(let i=0; i<gameWidth; i++) {
       for(let j=0; j<gameHeight; j++) {
@@ -56,7 +55,6 @@ gameState.getScreenBuffer = function() {
       }
     }
   }
-  
   for(var i=0; i<gameWidth; i++) {
     screenBuffer.push((new Array(gameHeight)).fill(false));
   }
@@ -119,27 +117,27 @@ function update(gameState) {
 
 function updateBall() {
   // collide with right paddle
-  if ((gameState.ball.x === gameWidth - 1 - paddleWidth) && paddleCollison(gameState.ball, gameState.paddle2)) {
+  if ((gameState.ball.x + ballRadius === gameWidth - 1 - paddleWidth) && paddleCollison(gameState.ball, gameState.paddle2)) {
     gameState.ball.velocity.x *= -1;
   }
   // collide with left paddle
-  if ((gameState.ball.x === paddleWidth) && paddleCollison(gameState.ball, gameState.paddle1)) {
+  if ((gameState.ball.x - ballRadius === paddleWidth) && paddleCollison(gameState.ball, gameState.paddle1)) {
     gameState.ball.velocity.x *= -1;
   }
   // collide with right wall
-  if (gameState.ball.x === gameWidth - 1) {
+  if (gameState.ball.x + ballRadius === gameWidth - 1) {
     gameState.ball.velocity.x *= -1;
   }
   // collide with left wall
-  if (gameState.ball.x === 0) {
+  if (gameState.ball.x - ballRadius === 0) {
     gameState.ball.velocity.x *= -1;
   }
   // collide with bottom
-  if (gameState.ball.y === gameHeight - 1) {
+  if (gameState.ball.y + ballRadius === gameHeight - 1) {
     gameState.ball.velocity.y *= -1;
   }
   // collide with top
-  if (gameState.ball.y === 0) {
+  if (gameState.ball.y - ballRadius === 0) {
     gameState.ball.velocity.y *= -1;
   }
   gameState.ball.x += gameState.ball.velocity.x;
