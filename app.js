@@ -4,12 +4,13 @@ var ctx = canvas.getContext("2d");
 // ctx.fillStyle = "black";
 // ctx.fillRect(10, 10, 100, 100);
 
-const gameWidth    = 24;
-const gameHeight   = 18;
+const gameWidth    = 240;
+const gameHeight   = 180;
 const canvasWidth  = canvas.width;
 const canvasHeight = canvas.height;
-const gameSpeed    = 100;
-const paddleHeight = 4;
+const gameSpeed    = 10;
+const paddleHeight = 40;
+const paddleWidth  = paddleHeight/4;
 const gameState = {
   ball: {x: gameWidth/2, y: gameHeight/2, velocity: { x: 1, y: 0 }},
   paddle1: {x: 0, y: gameHeight/2, velocity: { x: 0, y: 0 }},
@@ -50,16 +51,14 @@ gameState.getScreenBuffer = function() {
   }
   // set ball pixels to true
   screenBuffer[this.ball.x][this.ball.y] = true;
-  // set paddle1 pixels
-  screenBuffer[this.paddle1.x][this.paddle1.y] = true;
-  screenBuffer[this.paddle1.x][this.paddle1.y+1] = true;
-  screenBuffer[this.paddle1.x][this.paddle1.y+2] = true;
-  screenBuffer[this.paddle1.x][this.paddle1.y+3] = true;
-  // set paddle2 pixels
-  screenBuffer[this.paddle2.x][this.paddle2.y] = true;
-  screenBuffer[this.paddle2.x][this.paddle2.y+1] = true;
-  screenBuffer[this.paddle2.x][this.paddle2.y+2] = true;
-  screenBuffer[this.paddle2.x][this.paddle2.y+3] = true;
+  for (let i=0; i<paddleHeight; i++) {
+    for (let j=0; j<paddleWidth; j++) {
+      // set paddle1 pixels
+      screenBuffer[this.paddle1.x + j][this.paddle1.y + i] = true;
+      // set paddle2 pixels
+      screenBuffer[this.paddle2.x - j][this.paddle2.y + i] = true;
+    }
+  }
   return screenBuffer;
 }
 
